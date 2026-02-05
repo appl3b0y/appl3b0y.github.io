@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Writeups | appl3b0y</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.min.6c024fd1ea3c339881f761adeb94e0bb6c3d59fa6bec27d058aba9f4cc9e7e31.css" integrity="sha256-bAJP0eo8M5iB92Gt65Tgu2w9Wfpr7CfQWKup9MyefjE=" crossorigin="anonymous">
+
+        <script src="/js/main.8689c693cfce655ed1db63aba8831932920b4e15d870309d7c5f473a07eccaf2.js" integrity="sha256-honGk8/OZV7R22OrqIMZMpILThXYcDCdfF9HOgfsyvI=" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+  <header>
+    <nav class="main-nav" id="main-nav">
+  <div class="nav-content-wrapper">
+    <a href="https://appl3b0y.github.io/" class="brand">root@appl3b0y</a>
+    <button class="hamburger" id="hamburger">
+      <span class="hamburger-box">
+        <span class="hamburger-inner"></span>
+      </span>
+    </button>
+    <ul class="nav-links">
+  <li>
+    <a href="/writeups/" class="is-active">
+      /writeups
+    </a>
+  </li>
+  <li>
+    <a href="/blog/" class="">
+      blog
+    </a>
+  </li>
+</ul>
+
+  </div>
+</nav>
+
+  </header>
+  <main>
+    
+<div class="writeup-list-container">
+  <h1 class="page-title">Writeups</h1>
+  <p>Sharing my approach to HackTheBox labs. This repository documents technical methodologies and exploit vectors, serving as an educational resource for the offensive security community.</p>
+
+  <header class="writeup-list-header">
+    <div class="text-filter-container">
+      <input type="text" id="writeup-filter" placeholder="Search machines...">
+    </div>
+    <div class="combined-filters">
+      <div class="dropdown-filter">
+        <button class="dropdown-toggle" data-target="difficulty-menu">Difficulty <i></i></button>
+        <div id="difficulty-menu" class="dropdown-menu">
+          <div class="filter-group" data-filter-type="difficulty">
+            <div><input type="checkbox" value="Easy" id="cb-easy"><label for="cb-easy">Easy</label></div>
+            <div><input type="checkbox" value="Medium" id="cb-medium"><label for="cb-medium">Medium</label></div>
+            <div><input type="checkbox" value="Hard" id="cb-hard"><label for="cb-hard">Hard</label></div>
+            <div><input type="checkbox" value="Insane" id="cb-insane"><label for="cb-insane">Insane</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-filter">
+        <button class="dropdown-toggle" data-target="os-menu">OS <i></i></button>
+        <div id="os-menu" class="dropdown-menu">
+          <div class="filter-group" data-filter-type="os">
+            <div><input type="checkbox" value="Linux" id="cb-linux"><label for="cb-linux">Linux</label></div>
+            <div><input type="checkbox" value="Windows" id="cb-windows"><label for="cb-windows">Windows</label></div>
+            <div><input type="checkbox" value="Other" id="cb-other"><label for="cb-other">Other</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="giant-card-container">
+    <div class="writeup-table-responsive">
+      <table class="writeup-table" id="writeup-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Difficulty</th>
+            <th>OS</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="writeup-table-row" 
+              data-href="/writeups/bashed/"
+              data-title="bashed" 
+              data-os="linux" 
+              data-difficulty="easy">
+            <td class="table-name-cell">
+              <div class="name-content">
+                
+                  <img src="https://htb-mp-prod-public-storage.s3.eu-central-1.amazonaws.com/avatars/0f058b73659ca043de9f5240abd651ca.png" alt="Writeups">
+                
+                <span>Bashed</span>
+              </div>
+            </td>
+            <td class="table-difficulty">
+              
+                <span class="difficulty-tag easy">Easy</span>
+              
+            </td>
+            <td class="table-os">Linux</td>
+            <td class="table-date">Feb 4, 2026</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="pagination-container" class="pagination"></div>
+</div>
+
+  </main>
+  <footer>
+    <p>There's no place like 127.0.0.1 // Built with Hugo &amp; Gemini CLI</p>
+
+  </footer>
+</body>
+</html>

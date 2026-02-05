@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Easy on appl3b0y</title>
+    <link>https://appl3b0y.github.io/tags/easy/</link>
+    <description>Recent content in Easy on appl3b0y</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 04 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://appl3b0y.github.io/tags/easy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bashed</title>
+      <link>https://appl3b0y.github.io/writeups/bashed/</link>
+      <pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://appl3b0y.github.io/writeups/bashed/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Welcome to this technical breakdown of &lt;strong&gt;Bashed&lt;/strong&gt;, an introductory Linux machine. In this session, I will demonstrate how &lt;strong&gt;meticulous enumeration&lt;/strong&gt; is the key to a successful compromise.&lt;/p&gt;&#xA;&lt;p&gt;The core of this challenge is a common development error: leaving a &lt;strong&gt;publicly accessible web shell&lt;/strong&gt; on the server. In real-world scenarios, these administrative tools are direct gateways for an attacker to gain control over an internal network.&lt;/p&gt;&#xA;&lt;h2 id=&#34;enumeration&#34;&gt;Enumeration&lt;/h2&gt;&#xA;&lt;p&gt;I began by mapping the target IP to &lt;code&gt;bashed.htb&lt;/code&gt; in my local &lt;code&gt;/etc/hosts&lt;/code&gt; file. This is a standard step that makes it easier to interact with the target and helps in finding potential Virtual Hosts.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
