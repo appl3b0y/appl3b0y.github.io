@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site moved · appl3b0y.com</title>
+<meta http-equiv="refresh" content="3; url=https://appl3b0y.com/">
+<meta name="robots" content="noindex, follow">
+<style>
+  :root { --bg:#08090a; --green:#37e07f; --white:#eef2f5; --muted:#6b747e; --line:#2b333c; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); color:var(--white);
+    font-family:'Fira Code','Roboto Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    padding:1.5rem; }
+  .card { max-width:520px; text-align:center; border:1px solid var(--line); border-radius:12px;
+    padding:2.5rem 2rem; background:#0d0f12; }
+  .prompt { color:var(--green); font-size:.85rem; letter-spacing:1px; margin:0 0 1rem; }
+  h1 { margin:0 0 1rem; font-size:2rem; }
+  h1 .dot { color:var(--green); }
+  p { color:var(--muted); line-height:1.7; margin:.4rem 0; }
+  a { color:var(--green); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .count { color:var(--white); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <p class="prompt">&#10095; redirecting&#8230;</p>
+    <h1>This site has moved</h1>
+    <p>It now lives at <a id="link" href="https://appl3b0y.com/">appl3b0y<span class="dot">.</span>com</a></p>
+    <p>Taking you there in <span class="count" id="c">3</span> seconds.</p>
+  </div>
+  <script>
+    var dest = 'https://appl3b0y.com' + location.pathname + location.search + location.hash;
+    var link = document.getElementById('link');
+    if (link) link.href = dest;
+    var n = 3, el = document.getElementById('c');
+    var t = setInterval(function () {
+      n--; if (el) el.textContent = n;
+      if (n <= 0) { clearInterval(t); location.replace(dest); }
+    }, 1000);
+  </script>
+</body>
+</html>
